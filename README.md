@@ -23,12 +23,12 @@ git checkout -b infant-voc-classification
 git pull origin infant-voc-classification
 ```
 
-### install SpeechBrain
+### Install SpeechBrain
 ```
 pip install -r requirements.txt
 pip install --editable .
 ```
-### All of relevant codes are stored in the folder of **recipes/wav2vec_LittleBeats**
+### All of relevant codes are stored in the following folder 
 ```
 cd recipes/wav2vec_LittleBeats
 ```
