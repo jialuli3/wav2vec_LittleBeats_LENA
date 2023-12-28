@@ -1,4 +1,5 @@
 ## LittleBeats family audio analysis: parent/infant speaker diarizatio and vocalization classification tasks 
+This is the official implementation of our paper [Towards Robust Family-Infant Audio Analysis Based on Unsupervised Pretraining of Wav2vec 2.0 on Large-Scale Unlabeled Family Audio](https://arxiv.org/abs/2305.12530).
 This recipe is developed based on SpeechBrain toolkit. This recipe contains scripts for training parent/infant speaker diarization and vocalization classifications on LittleBeats home recordings using wav2vec 2.0 model.
 
 ### About LittleBeats
