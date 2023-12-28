@@ -7,14 +7,6 @@ LittleBeats is a new infant wearable multi-modal device that we developed, which
 For more details, check out **https://littlebeats.hdfs.illinois.edu/**
 
 ## Uses
-### Install SpeechBrain
-```
-git clone https://github.com/speechbrain/speechbrain.git
-cd speechbrain
-pip install -r requirements.txt
-pip install --editable .
-
-```
 
 ### Download pretrained wav2vec2 models on LittleBeats and LENA audio ###
 
@@ -22,12 +14,22 @@ Our pretrained model weights can be downloaded via our Hugging Face repository
 
 https://huggingface.co/lijialudew/wav2vec_LittleBeats_LENA/tree/main
 
-### Check out this branch
+### Clone and checkout this branch 
 ```
-git clone https://github.com/jialuli3/speechbrain.git
+git clone --recurse-submodules git@github.com:jialuli3/wav2vec_LittleBeats_LENA.git
 cd speechbrain
 git checkout -b infant-voc-classification
 git pull origin infant-voc-classification
+```
+
+### install SpeechBrain
+```
+pip install -r requirements.txt
+pip install --editable .
+```
+### All of relevant codes are stored in the folder of **recipes/wav2vec_LittleBeats**
+```
+cd recipes/wav2vec_LittleBeats
 ```
 
 ### Prepare data in json format ###
@@ -80,11 +82,6 @@ Sample json file we used in our experiments can be found in **sample_json/sample
 - Change *data_folder* if prepared json file specifies relative path pointers (absolute path doesn't require to use this argument); read more about dataloader [here](https://speechbrain.readthedocs.io/en/latest/API/speechbrain.dataio.dataio.html#speechbrain.dataio.dataio.load_data_json)
 
 ### Fine-tune wav2vec2 model on speaker diarization and parent/infant vocalization classification tasks ###
-Before running Python script, first run
-```
-cd recipes/wav2vec_LittleBeats
-```
-
 Run the following commands to fine-tune wav2vec2 using our developed recipe
 
 ```
@@ -103,8 +100,16 @@ python scripts/train_WA_wav_aug_on_sp_spk_domain.py hparams/hparams_LL_4300_WA_a
 
 ### Paper/BibTex Citation
 If you found this recipe or our paper helpful, please cite us as
-
-Coming soon
+```
+@inproceedings{li23e_interspeech,
+  author={Jialu Li and Mark Hasegawa-Johnson and Nancy L. McElwain},
+  title={{Towards Robust Family-Infant Audio Analysis Based on Unsupervised Pretraining of Wav2vec 2.0 on Large-Scale Unlabeled Family Audio}},
+  year=2023,
+  booktitle={Proc. INTERSPEECH 2023},
+  pages={1035--1039},
+  doi={10.21437/Interspeech.2023-460}
+}
+```
 
 ### Contact
 Jialu Li (she, her, hers)
