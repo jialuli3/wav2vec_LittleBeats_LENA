@@ -26,6 +26,10 @@ This recipe contains scripts for
   ```
   cd recipes/LibriSpeech/ASR/CTC_Children_PR
   ```
+- perform vocalization classification in BabbleCor with Phoneme Recognition features 
+  ```
+  cd recipes/BabbleCor
+  ```
 
 **Readme.md document is availabel under each directory for more detailed walkthrough.**
 
