@@ -1,21 +1,14 @@
-## LittleBeats family audio analysis: parent/infant speaker diarizatio and vocalization classification tasks 
-This is the official implementation of our paper [Towards Robust Family-Infant Audio Analysis Based on Unsupervised Pretraining of Wav2vec 2.0 on Large-Scale Unlabeled Family Audio](https://arxiv.org/abs/2305.12530).
-This recipe is developed based on SpeechBrain toolkit. This recipe contains scripts for training parent/infant speaker diarization and vocalization classifications on LittleBeats home recordings using wav2vec 2.0 model.
+## Recipes for Analyzing Infant/Parent Vocalization and Children's Speech 
+These recipes are developed based on [SpeechBrain toolkit](https://github.com/speechbrain/speechbrain) using wav2vec 2.0 model. 
 
-### About LittleBeats
-LittleBeats is a new infant wearable multi-modal device that we developed, which simultaneously records audio, movement of the infant, as well as heart-rate variablity. We use wav2vec2 to advance LB audio pipeline such that it automatically provides reliable labels of speaker diarization and vocalization classifications for family members, including infants, parents, and siblings, at home.
+### Uses
+To check out this repository,
+```
+git clone git@github.com:jialuli3/wav2vec_LittleBeats_LENA.git
+git submodule update --init --recursive
+```
 
-For more details, check out **https://littlebeats.hdfs.illinois.edu/**
-
-## Uses
-
-### Download pretrained wav2vec2 models on LittleBeats and LENA audio ###
-
-Our pretrained model weights can be downloaded via our Hugging Face repository
-
-https://huggingface.co/lijialudew/wav2vec_LittleBeats_LENA/tree/main
-
-### Clone and checkout this branch 
+or 
 ```
 git clone --recurse-submodules git@github.com:jialuli3/wav2vec_LittleBeats_LENA.git
 cd speechbrain
@@ -23,84 +16,21 @@ git checkout -b infant-voc-classification
 git pull origin infant-voc-classification
 ```
 
-### Install SpeechBrain
-```
-pip install -r requirements.txt
-pip install --editable .
-```
-### All of relevant codes are stored in the following folder 
-```
-cd recipes/wav2vec_LittleBeats
-```
+### Directory for each recipe
+This recipe contains scripts for 
+- Training parent/infant speaker diarization and vocalization classifications on LittleBeats home recordings. 
+  ```
+  cd recipes/wav2vec_LittleBeats
+  ```
+- perform children's phoneme recognition
+  ```
+  cd recipes/LibriSpeech/ASR/CTC_Children_PR
+  ```
 
-### Prepare data in json format ###
-To make data compatible with this script, prepare your data similar as the following json format
-```
-{
-  "sample_data1": { # silence interval
-    "wav_voc": "path/to/your/wav/file1",
-    "dur_voc": 2.0,
-    "sp": "SIL",
-    "chn": "N",
-    "fan": "N",
-    "man": "N",
-    "domain_label": "LB"
-    },
-  "sample_data2": { # CHN is babbling
-    "wav_voc": "path/to/your/wav/file2",
-    "dur_voc": 2.0,
-    "sp": "CHN",
-    "chn": "BAB",
-    "fan": "N",
-    "man": "N",
-    "domain_label": "LENA"
-    }
-}
-```
-Speakers types include:
-- **CHN**: target child
-- **FAN**: female adult
-- **MAN**: male adult
-- **CXN**: sibling/other child
-
-Vocalization types include:
-- **CHN**
-    - *CRY*: cry
-    - *FUS*: fuss
-    - *BAB*: babble
-- **MAN/FAN**
-    - *CDS*: child-directed speech
-    - *MAN/FAN*: adult-directed speech
-    - *LAU*: laugh
-    - *SNG*: singing/rhythimic
-
-Sample json file we used in our experiments can be found in **sample_json/sample_json.json**
-
-### Make yaml files in *hparams* folder compatiable with your dataset
-- Change data paths in *train_annotation*, *valid_annotation*, and *test_annotation*
-- Download pretrained wav2vec checkpoints from our [HuggingFace repo](https://huggingface.co/lijialudew/wav2vec_LittleBeats_LENA/tree/main) and change *pretrained_path* under *wav2vec2* section accordingly
-- If training with data augmentation, set *rir_folder* to a designated place for storing noise datapoints (noise data will be automatically downloaded)
-- Change *data_folder* if prepared json file specifies relative path pointers (absolute path doesn't require to use this argument); read more about dataloader [here](https://speechbrain.readthedocs.io/en/latest/API/speechbrain.dataio.dataio.html#speechbrain.dataio.dataio.load_data_json)
-
-### Fine-tune wav2vec2 model on speaker diarization and parent/infant vocalization classification tasks ###
-Run the following commands to fine-tune wav2vec2 using our developed recipe
-
-```
-# Train wav2vec2 with features of last transformer layer
-python scripts/train_3dnn.py hparams/hparams_LL_4300.yaml
-
-# Train wav2vec2 with features over all transformer layers
-python scripts/train_WA_3dnn.py hparams/hparams_LL_4300.yaml
-
-# Train wav2vec2 with data augmentation on speaker diarization tier
-python scripts/train_WA_wav_aug_on_sp.py hparams/hparams_LL_4300_WA_aug_on_sp.yaml
-
-# Train wav2vec2 with domain embeddings, ECAPA-TDNN speaker embeddings on vocalization classification tiers, and data augmentation  on speaker diarization tier
-python scripts/train_WA_wav_aug_on_sp_spk_domain.py hparams/hparams_LL_4300_WA_aug_spk_domain.yaml
-```
+**Readme.md document is availabel under each directory for more detailed walkthrough.**
 
 ### Paper/BibTex Citation
-If you found this recipe or our paper helpful, please cite us as
+If you found this recipe or our paper helpful, please cite at least one of our references as
 ```
 @inproceedings{li23e_interspeech,
   author={Jialu Li and Mark Hasegawa-Johnson and Nancy L. McElwain},
@@ -111,11 +41,24 @@ If you found this recipe or our paper helpful, please cite us as
   doi={10.21437/Interspeech.2023-460}
 }
 ```
-
+```
+@inproceedings{li2024analysis,
+  title={Analysis of Self-Supervised Speech Models on Children's Speech and Infant Vocalizations},
+  author={Li, Jialu and Hasegawa-Johnson, Mark and McElwain, Nancy L},
+  booktitle={IEEE Workshop on Self-Supervision in Audio, Speech and Beyond (SASB)},
+  year={2024}
+}
+```
+```
+@article{li2023enhancing,
+  title={Enhancing Child Vocalization Classification with Phonetically-Tuned Embeddings for Assisting Autism Diagnosis},
+  author={Li, Jialu and Hasegawa-Johnson, Mark and Karahalios, Karrie},
+  booktitle={Interspeech},
+  year={2024}
+}
+```
 ### Contact
 Jialu Li (she, her, hers)
-
-Ph.D candidate @ Department of Electrical and Computer Engineering, University of Illinois at Urbana-Champaign
 
 E-mail: jialuli3@illinois.edu
 

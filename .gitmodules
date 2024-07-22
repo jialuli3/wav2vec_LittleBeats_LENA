@@ -1,3 +1,4 @@
 [submodule "speechbrain"]
 	path = speechbrain
 	url = git@github.com:jialuli3/speechbrain.git
+	branch = infant-voc-classification
