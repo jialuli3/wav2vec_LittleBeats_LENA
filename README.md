@@ -5,6 +5,7 @@ These recipes are developed based on an early version of [SpeechBrain toolkit](h
 To check out this repository and install speechbrain,
 ```
 git clone https://github.com/jialuli3/wav2vec_LittleBeats_LENA.git
+cd wav2vec_LittleBeats_LENA
 cd speechbrain
 pip install -r requirements.txt
 pip install --editable .
