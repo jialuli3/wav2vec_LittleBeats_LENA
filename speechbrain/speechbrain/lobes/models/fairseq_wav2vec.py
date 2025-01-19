@@ -218,7 +218,7 @@ class FairseqWav2Vec2(nn.Module):
                 features.append(curr_feature)
             features = torch.stack(features)
         elif self.output_all_hiddens:
-            features = self.aggregate_features(out, include_CNN_layer=self.include_CNN_layer) # 13, B, T, D
+            features = self.aggregate_features(out) # 13, B, T, D
         else: # output last layer only
             features = out['x']
 
@@ -236,7 +236,7 @@ class FairseqWav2Vec2(nn.Module):
             features.append(curr_feature)
         features = torch.stack(features)
         return features
-        
+
     def reset_layer(self, model):
         """Reinitializes the parameters of the network"""
         if hasattr(model, "reset_parameters"):
