@@ -1,24 +1,19 @@
 ## Recipes for Analyzing Infant/Parent Vocalization and Children's Speech 
-These recipes are developed based on [SpeechBrain toolkit](https://github.com/speechbrain/speechbrain) using wav2vec 2.0 model. 
+These recipes are developed based on an early version of [SpeechBrain toolkit](https://github.com/speechbrain/speechbrain) using wav2vec 2.0 model. 
 
 ### Uses
 To check out this repository,
 ```
-git clone git@github.com:jialuli3/wav2vec_LittleBeats_LENA.git
-git submodule update --init --recursive
-```
-
-or 
-```
-git clone --recurse-submodules git@github.com:jialuli3/wav2vec_LittleBeats_LENA.git
+git clone https://github.com/jialuli3/wav2vec_LittleBeats_LENA.git
 cd speechbrain
-git checkout -b infant-voc-classification
-git pull origin infant-voc-classification
+pip install -r requirements.txt
+pip install --editable .
 ```
 
 ### Directory for each recipe
 This recipe contains scripts for 
 - Training parent/infant speaker diarization and vocalization classifications on LittleBeats home recordings. 
+
   ```
   cd recipes/wav2vec_LittleBeats
   ```
@@ -30,8 +25,7 @@ This recipe contains scripts for
   ```
   cd recipes/BabbleCor
   ```
-
-**Readme.md document is availabel under each directory for more detailed walkthrough.**
+**Readme.md document is available under each directory for more detailed walkthrough.**
 
 ### Paper/BibTex Citation
 If you found this recipe or our paper helpful, please cite at least one of our references as
