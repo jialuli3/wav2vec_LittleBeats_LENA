@@ -41,19 +41,24 @@ If you found this recipe or our paper helpful, please cite at least one of our r
 }
 ```
 ```
-@inproceedings{li2024analysis,
-  title={Analysis of Self-Supervised Speech Models on Children's Speech and Infant Vocalizations},
-  author={Li, Jialu and Hasegawa-Johnson, Mark and McElwain, Nancy L},
-  booktitle={IEEE Workshop on Self-Supervision in Audio, Speech and Beyond (SASB)},
-  year={2024}
-}
+@INPROCEEDINGS{10626416,
+  author={Li, Jialu and Hasegawa-Johnson, Mark and McElwain, Nancy L.},
+  booktitle={2024 IEEE International Conference on Acoustics, Speech, and Signal Processing Workshops (ICASSPW)}, 
+  title={Analysis of Self-Supervised Speech Models on Children’s Speech and Infant Vocalizations}, 
+  year={2024},
+  pages={550-554},
+  doi={10.1109/ICASSPW62465.2024.10626416}}
+
 ```
 ```
-@article{li2023enhancing,
-  title={Enhancing Child Vocalization Classification with Phonetically-Tuned Embeddings for Assisting Autism Diagnosis},
-  author={Li, Jialu and Hasegawa-Johnson, Mark and Karahalios, Karrie},
-  booktitle={Interspeech},
-  year={2024}
+@inproceedings{li24j_interspeech,
+  title     = {Enhancing Child Vocalization Classification with  Phonetically-Tuned Embeddings for Assisting Autism Diagnosis},
+  author    = {Jialu Li and Mark Hasegawa-Johnson and Karrie Karahalios},
+  year      = {2024},
+  booktitle = {Interspeech 2024},
+  pages     = {5163--5167},
+  doi       = {10.21437/Interspeech.2024-540},
+  issn      = {2958-1796},
 }
 ```
 ### Contact
