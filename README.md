@@ -2,7 +2,7 @@
 These recipes are developed based on an early version of [SpeechBrain toolkit](https://github.com/speechbrain/speechbrain) using wav2vec 2.0 model. 
 
 ### Uses
-To check out this repository,
+To check out this repository and install speechbrain,
 ```
 git clone https://github.com/jialuli3/wav2vec_LittleBeats_LENA.git
 cd speechbrain

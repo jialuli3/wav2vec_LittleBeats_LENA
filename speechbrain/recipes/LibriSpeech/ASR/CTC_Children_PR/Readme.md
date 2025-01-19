@@ -4,22 +4,6 @@ This recipe is developed based on SpeechBrain toolkit. This recipe contains scri
 This recipe provides a sample of training phoneme recognition on My Science Tutor (MyST). Similar recipe can be produced for training Providence corpus.
 
 ## Uses
-### Install SpeechBrain
-```
-git clone https://github.com/speechbrain/speechbrain.git
-cd speechbrain
-pip install -r requirements.txt
-pip install --editable .
-
-```
-
-### Check out this branch
-```
-git clone https://github.com/jialuli3/speechbrain.git
-cd speechbrain
-git checkout -b infant-voc-classification
-git pull origin infant-voc-classification
-```
 
 ### Change to the directory of recipe
 ```

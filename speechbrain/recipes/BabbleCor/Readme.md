@@ -10,22 +10,6 @@ This recipe is developed based on SpeechBrain toolkit. This recipe contains scri
 - junk
 
 ## Uses
-### Install SpeechBrain
-```
-git clone https://github.com/speechbrain/speechbrain.git
-cd speechbrain
-pip install -r requirements.txt
-pip install --editable .
-
-```
-
-### Check out this branch
-```
-git clone https://github.com/jialuli3/speechbrain.git
-cd speechbrain
-git checkout -b infant-voc-classification
-git pull origin infant-voc-classification
-```
 
 ### Change to BabbleCor directory
 ```

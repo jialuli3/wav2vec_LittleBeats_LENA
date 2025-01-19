@@ -7,14 +7,6 @@ LittleBeats is a new infant wearable multi-modal device that we developed, which
 For more details, check out **https://littlebeats.hdfs.illinois.edu/**
 
 ## Uses
-### Install SpeechBrain
-```
-git clone https://github.com/speechbrain/speechbrain.git
-cd speechbrain
-pip install -r requirements.txt
-pip install --editable .
-
-```
 
 ### Download pretrained wav2vec2 models on LittleBeats and LENA audio ###
 
