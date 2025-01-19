@@ -1,0 +1,198 @@
+# Seed needs to be set at top of yaml, before objects with parameters are made
+seed: 1992
+__set_seed: !apply:torch.manual_seed [1992]
+
+data_folder: /path/to/your/wav/data 
+output_folder: results/wav2vec2_base_fold1/1992
+save_folder: results/wav2vec2_base_fold1/1992/save_2s_LL4300_WA_wav_aug_on_sp
+train_log: results/wav2vec2_base_fold1/1992/train_LL4300_WA_wav_aug_on_sp.txt
+output_log: results/wav2vec2_base_fold1/1992/output_LL4300_WA_wav_aug_on_sp.txt
+rir_folder: /path/to/noise/data/folder/ #e.g. can be automatically downloaded from the code
+
+# Path where data manifest files will be stored
+train_annotation: /path/to/training/json/file
+valid_annotation: /path/to/valid/json/file
+test_annotation: /path/to/testing/json/file
+
+# The train logger writes training statistics to a file, as well as stdout.
+train_logger: !new:speechbrain.utils.train_logger.FileTrainLogger
+  save_file: !ref <train_log>
+
+ckpt_interval_minutes: 15 # save checkpoint every N min
+
+# Training parameters
+number_of_epochs: 10
+lr: 0.0001
+lr_wav2vec2: 0.00001
+sample_rate: 16000
+
+# Model parameters
+encoder_dim: 768
+dnn_out_dim: 384
+mean_pool_first_sp: true
+mean_pool_first_chn: true
+mean_pool_first_adu: true
+
+dataloader_options:
+  batch_size: 32
+  shuffle: true
+  num_workers: 2    # 2 on linux but 0 works on windows
+  drop_last: true
+
+# Wav2vec2 encoder (use our pretrained LL4300h model weights)
+wav2vec2: &id001 !new:speechbrain.lobes.models.fairseq_wav2vec.FairseqWav2Vec2
+  pretrained_path: /path/to/LL4300h/checkpoint_best.pt # can be downloaded from our HuggingFace repository
+  output_norm: true
+  freeze: false
+  output_all_hiddens: true
+  encoder_dropout: 0
+  include_CNN_layer: false
+  save_path: results/wav2vec2_base_fold1/1992/save_2s_LL4300_WA_wav_aug_on_sp/wav2vec_LL_4300.pt
+
+avg_pool: !new:speechbrain.nnet.pooling.StatisticsPooling
+  return_std: false
+
+output_mlp_sp: &idsp !new:speechbrain.nnet.linear.Linear
+  input_size: !ref <dnn_out_dim>
+  n_neurons: 5
+  bias: false
+
+output_mlp_chn: &idchn !new:speechbrain.nnet.linear.Linear
+  input_size: !ref <dnn_out_dim>
+  n_neurons: 3
+  bias: false
+
+output_mlp_adu: &idadu !new:speechbrain.nnet.linear.Linear
+  input_size: !ref <dnn_out_dim>
+  n_neurons: 4
+  bias: false
+
+dnn_sp: &id_dnn_sp !new:speechbrain.lobes.models.CRDNN.DNN_Block
+  input_shape: [null,768]
+  neurons: !ref <dnn_out_dim>
+  dropout: 0.1
+
+dnn_chn: &id_dnn_chn !new:speechbrain.lobes.models.CRDNN.DNN_Block
+  input_shape: [null,768]
+  neurons: !ref <dnn_out_dim>
+  dropout: 0.1
+
+dnn_adu: &id_dnn_adu !new:speechbrain.lobes.models.CRDNN.DNN_Block
+  input_shape: [null,768]
+  neurons: !ref <dnn_out_dim>
+  dropout: 0.1
+
+weighted_average_sp: &id_wa_sp !new:speechbrain.nnet.linear.WeightedAverage
+  input_size: 12
+  n_neurons: 1
+
+weighted_average_chn: &id_wa_chn !new:speechbrain.nnet.linear.WeightedAverage
+  input_size: 12
+  n_neurons: 1
+
+weighted_average_adu: &id_wa_adu !new:speechbrain.nnet.linear.WeightedAverage
+  input_size: 12
+  n_neurons: 1
+
+epoch_counter: &id006 !new:speechbrain.utils.epoch_loop.EpochCounter
+  limit: !ref <number_of_epochs>
+
+augment_wavedrop: !new:speechbrain.lobes.augment.TimeDomainSpecAugment
+    sample_rate: !ref <sample_rate>
+    speeds: [100]
+
+augment_speed: !new:speechbrain.lobes.augment.TimeDomainSpecAugment
+    sample_rate: !ref <sample_rate>
+    speeds: [95, 100, 105]
+
+add_rev: !new:speechbrain.lobes.augment.EnvCorrupt
+    reverb_csv: !ref <rir_folder>/reverb.csv
+    openrir_max_noise_len: 3.0  # seconds
+    reverb_prob: 1.0
+    noise_prob: 0.0
+    noise_snr_low: 0
+    noise_snr_high: 15
+    rir_scale_factor: 1.0
+
+add_noise: !new:speechbrain.lobes.augment.EnvCorrupt
+    noise_csv: !ref <rir_folder>/noise.csv
+    openrir_max_noise_len: 3.0  # seconds
+    reverb_prob: 0.0
+    noise_prob: 1.0
+    noise_snr_low: 0
+    noise_snr_high: 15
+    rir_scale_factor: 1.0
+
+add_rev_noise: !new:speechbrain.lobes.augment.EnvCorrupt
+    reverb_csv: !ref <rir_folder>/reverb.csv
+    noise_csv: !ref <rir_folder>/noise.csv
+    openrir_max_noise_len: 3.0  # seconds
+    reverb_prob: 1.0
+    noise_prob: 1.0
+    noise_snr_low: 0
+    noise_snr_high: 15
+    rir_scale_factor: 1.0
+
+augment_pipeline: [
+    !ref <augment_wavedrop>,
+    !ref <augment_speed>,
+    !ref <add_rev>,
+    !ref <add_noise>,
+    !ref <add_rev_noise>
+]
+
+concat_augment: True
+
+
+modules:
+  wav2vec2: *id001
+  weighted_average_sp: *id_wa_sp
+  weighted_average_chn: *id_wa_chn
+  weighted_average_adu: *id_wa_adu
+  dnn_sp: *id_dnn_sp
+  dnn_chn: *id_dnn_chn
+  dnn_adu: *id_dnn_adu
+  output_mlp_sp: *idsp
+  output_mlp_chn: *idchn
+  output_mlp_adu: *idadu
+
+model: &id003 !new:torch.nn.ModuleList
+- [*id_dnn_sp,*id_dnn_chn,*id_dnn_adu,*idsp,*idchn,*idadu,*id_wa_sp,*id_wa_chn, *id_wa_adu]
+
+log_softmax: !new:speechbrain.nnet.activations.Softmax
+  apply_log: true
+
+compute_cost: !name:speechbrain.nnet.losses.nll_loss
+
+error_stats: !name:speechbrain.utils.metric_stats.MetricStats
+  metric: !name:speechbrain.nnet.losses.classification_error
+    reduction: batch
+
+error_stats_kic: !name:speechbrain.utils.metric_stats.KICMultitaskBinaryMetricStats
+  record_man: false # If True, ADU classification is separated into MAN or FAN; If False, ADU classification is not separated 
+
+opt_class: !name:torch.optim.Adam
+  lr: !ref <lr>
+
+wav2vec2_opt_class: !name:torch.optim.Adam
+  lr: !ref <lr_wav2vec2>
+
+lr_annealing: &id004 !new:speechbrain.nnet.schedulers.NewBobScheduler
+  initial_value: !ref <lr>
+  improvement_threshold: 0.0025
+  annealing_factor: 0.9
+  patient: 0
+
+lr_annealing_wav2vec2: &id005 !new:speechbrain.nnet.schedulers.NewBobScheduler
+  initial_value: !ref <lr_wav2vec2>
+  improvement_threshold: 0.0025
+  annealing_factor: 0.9
+
+checkpointer: !new:speechbrain.utils.checkpoints.Checkpointer
+  checkpoints_dir: results/wav2vec2_base_fold1/1992/save_2s_LL4300_WA_wav_aug_on_sp
+  recoverables:
+    model: *id003
+    wav2vec2: *id001
+    lr_annealing_output: *id004
+    lr_annealing_wav2vec2: *id005
+    counter: *id006

@@ -1,0 +1,20 @@
+{
+    "0815148374": {
+      "wav": "/ws/ifp-10_1/hasegawa/jialuli3/babblecor/clips/clips_corpus/0815148374.wav",
+      "label": "Junk",
+      "child_ID": "7176",
+      "hyp_pr": "o\u028a"
+    },
+    "0499728595": {
+      "wav": "/ws/ifp-10_1/hasegawa/jialuli3/babblecor/clips/clips_corpus/0499728595.wav",
+      "label": "Junk",
+      "child_ID": "41",
+      "hyp_pr": "o\u028a"
+    },
+    "0826209937": {
+      "wav": "/ws/ifp-10_1/hasegawa/jialuli3/babblecor/clips/clips_corpus/0826209937.wav",
+      "label": "Non-canonical",
+      "child_ID": "10",
+      "hyp_pr": "a o\u028a"
+    }
+}

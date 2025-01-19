@@ -1,0 +1,145 @@
+# Seed needs to be set at top of yaml, before objects with parameters are made
+seed: 2022
+__set_seed: !apply:torch.manual_seed [!ref <seed>]
+
+# Dataset will be downloaded to the `data_original`
+# Data prepare function will create a modified dataset with structured data
+data_folder: /path/to/data/storage/ #optional if specified within full path
+output_folder: !ref results/wav2vec_base_bbc/<seed>
+save_folder: !ref <output_folder>/save_1_wav2vec_LL4300_WA_concat_asr
+train_log: !ref <output_folder>/train_log_1_wav2vec_LL4300_WA_concat_asr.txt
+out_file: !ref <output_folder>/output_1_wav2vec_LL4300_WA_concat_asr.txt
+
+# Path where data manifest files will be stored
+train_annotation: /path/to/train.json
+valid_annotation: /path/to/dev.json
+test_annotation: /path/to/test.json
+
+# The train logger writes training statistics to a file, as well as stdout.
+train_logger: !new:speechbrain.utils.train_logger.FileTrainLogger
+    save_file: !ref <train_log>
+
+ckpt_interval_minutes: 15 # save checkpoint every N min
+
+# Training parameters
+number_of_epochs: 10
+batch_size: 16
+lr: 0.00003
+lr_wav2vec2: 0.00001
+mean_pool_first_chi: true
+mean_pool_first_adu: true
+combine_asr: concat # could either be "concat" or "sum"
+combine_factor_asr: 0.2 # only used when combine_asr == "sum"
+
+# Model parameters
+dnn_neurons: 512
+
+# Number of emotions
+out_n_neurons_chi: 5 # (NONE, cry, laugh, non-canonical, canonical)
+
+encoder_dim: 1536 # hidden dimension after combination module
+
+dataloader_options:
+    batch_size: !ref <batch_size>
+    shuffle: True
+    num_workers: 2  # 2 on linux but 0 works on windows
+    drop_last: False
+
+valid_dataloader_options:
+    batch_size: !ref <batch_size>
+    shuffle: False
+    num_workers: 2  # 2 on linux but 0 works on windows
+    drop_last: False
+
+test_dataloader_options:
+    batch_size: !ref <batch_size>
+    shuffle: False
+    num_workers: 2  # 2 on linux but 0 works on windows
+    drop_last: False
+
+wav2vec2_hub: "facebook/wav2vec2-base"
+
+# Wav2vec2 encoder
+wav2vec2: &id001 !new:speechbrain.lobes.models.fairseq_wav2vec.FairseqWav2Vec2
+  pretrained_path: /ws/ifp-10_1/hasegawa/jialuli3/speechbrain/recipes/wav2vec_kic/LL_4300/checkpoint_best.pt
+  output_norm: true
+  freeze: false
+  output_all_hiddens: true
+  encoder_dropout: 0
+  include_CNN_layer: false
+  save_path: results/wav2vec_base_bbc/2022/save_1_wav2vec_LL4300_WA_concat_asr/wav2vec_LL_4300.pt
+
+wav2vec_asr: !new:speechbrain.lobes.models.huggingface_wav2vec.HuggingFaceWav2Vec2
+   source: !ref <wav2vec2_hub>
+   output_norm: True
+   freeze: True
+   save_path: !ref <save_folder>/wav2vec2_checkpoint
+
+weighted_average_chi: &id_wa_chi !new:speechbrain.nnet.linear.WeightedAverage
+  input_size: 12
+  n_neurons: 1
+
+avg_pool: !new:speechbrain.nnet.pooling.StatisticsPooling
+    return_std: False
+
+dnn_block_chi: &id_dnn_chi !new:speechbrain.lobes.models.CRDNN.DNN_Block
+    input_shape: [null,null, !ref <encoder_dim>]
+    neurons: !ref <dnn_neurons>
+    dropout: 0.1
+
+output_mlp_chi: &idchi !new:speechbrain.nnet.linear.Linear
+    input_size: !ref <dnn_neurons>
+    n_neurons: !ref <out_n_neurons_chi>
+    bias: False
+
+epoch_counter: &id006 !new:speechbrain.utils.epoch_loop.EpochCounter
+    limit: !ref <number_of_epochs>
+
+modules:
+  wav2vec2: *id001
+  weighted_average_chi: *id_wa_chi
+  dnn_chi: *id_dnn_chi
+  output_mlp_chi: *idchi
+
+model: &id003 !new:torch.nn.ModuleList
+    - [*id_dnn_chi,*idchi,*id_wa_chi]
+
+log_softmax: !new:speechbrain.nnet.activations.Softmax
+    apply_log: True
+
+compute_cost: !name:speechbrain.nnet.losses.nll_loss
+
+error_stats: !name:speechbrain.utils.metric_stats.RABCBinaryMetricStats
+
+opt_class: !name:torch.optim.Adam
+    lr: !ref <lr>
+
+wav2vec2_opt_class: !name:torch.optim.Adam
+    lr: !ref <lr_wav2vec2>
+
+lr_annealing: &id004 !new:speechbrain.nnet.schedulers.NewBobScheduler
+  initial_value: !ref <lr>
+  improvement_threshold: 0.0001
+  annealing_factor: 0.9
+  patient: 0
+
+lr_annealing_wav2vec2: &id005 !new:speechbrain.nnet.schedulers.NewBobScheduler
+  initial_value: !ref <lr_wav2vec2>
+  improvement_threshold: 0.0001
+  annealing_factor: 0.9
+
+checkpointer: !new:speechbrain.utils.checkpoints.Checkpointer
+    checkpoints_dir: !ref <save_folder>
+    recoverables:
+        model: *id003
+        wav2vec2: *id001
+        lr_annealing_output: *id004
+        lr_annealing_wav2vec2: *id005
+        counter: *id006
+
+pretrainer: !new:speechbrain.utils.parameter_transfer.Pretrainer
+    collect_in: !ref <save_folder>
+    loadables:
+        wav2vec_asr: !ref <wav2vec_asr>
+    paths:
+        wav2vec_asr: !ref <save_folder>/wav2vec_asr.ckpt

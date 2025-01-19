@@ -1,0 +1,18 @@
+{
+    "myst_002116_2014-02-27_09-29-01_LS_1.1_001": {
+      "wav": "/media/jialu/Backup Plus/Bilingual_children/English/native_accent/myst-v0.4.2/data/test/002116/myst_002116_2014-02-27_09-29-01_LS_1.1/myst_002116_2014-02-27_09-29-01_LS_1.1_001.wav",
+      "raw_txt": "GOOD HOW ARE YOU",
+      "dur": 1.75,
+      "spk_id": "002116",
+      "cleaned_txt": "GOOD HOW ARE YOU",
+      "phonemes": "g \u028a d h a\u028a \u0259 r j u"
+    },
+    "myst_002116_2014-02-27_09-29-01_LS_1.1_002": {
+      "wav": "/media/jialu/Backup Plus/Bilingual_children/English/native_accent/myst-v0.4.2/data/test/002116/myst_002116_2014-02-27_09-29-01_LS_1.1/myst_002116_2014-02-27_09-29-01_LS_1.1_002.wav",
+      "raw_txt": "I HAVE BEEN LEARNING ABOUT SYSTEMS AND LIKE YOUR BODY IS A SYSTEM A SUITCASE IS A SYSTEM AND THE EARTH IS A",
+      "dur": 9.9975625,
+      "spk_id": "002116",
+      "cleaned_txt": "I HAVE BEEN LEARNING ABOUT SYSTEMS AND LIKE YOUR BODY IS A SYSTEM A SUITCASE IS A SYSTEM AND THE EARTH IS A",
+      "phonemes": "a\u026a h \u00e6 v b \u026a n l \u0259 r n \u026a \u014b \u0259 b a\u028a t s \u026a s t \u0259 m z \u0259 n d l a\u026a k j \u028a r b \u0251 d i \u026a z \u0259 s \u026a s t \u0259 m \u0259 s u t k e\u026a s \u026a z \u0259 s \u026a s t \u0259 m \u0259 n d \u00f0 \u0259 \u0259 r \u03b8 \u026a z \u0259"
+    }
+}
