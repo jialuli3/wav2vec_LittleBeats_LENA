@@ -1,5 +1,5 @@
 ## Recipes for Analyzing Infant/Parent Vocalization and Children's Speech 
-These recipes are developed based on an early version of [SpeechBrain toolkit](https://github.com/speechbrain/speechbrain) using wav2vec 2.0 model. 
+These recipes are developed based on an early version (0.5.3) of [SpeechBrain toolkit](https://github.com/speechbrain/speechbrain). 
 
 ### Uses
 To check out this repository and install speechbrain,
