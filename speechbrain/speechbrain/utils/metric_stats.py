@@ -18,7 +18,7 @@ from speechbrain.utils.edit_distance import wer_summary, wer_details_for_batch
 from speechbrain.dataio.dataio import merge_char, split_word
 from speechbrain.dataio.wer import print_wer_summary, print_alignments
 
-from sklearn.metrics import confusion_matrix,f1_score,accuracy_score,cohen_kappa_score
+from sklearn.metrics import confusion_matrix,f1_score,accuracy_score,cohen_kappa_score,recall_score
 import numpy as np
 import pdb
 import json

@@ -26,6 +26,7 @@ number_of_epochs: 10
 batch_size: 16
 lr: 0.00003
 lr_wav2vec2: 0.00001
+mean_pool_first_chi: True
 
 # Model parameters
 dnn_neurons: 512
