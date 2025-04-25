@@ -33,12 +33,17 @@ To make data compatible with this script, prepare your data similar as the follo
 
 Then convert provided transcript into IPA format, see a sample preprocessing script in **preprocessing_scripts/preprocess_MyST.py**. The output JSON file should look like a sample JSON file in **sample_json/sample_MyST.json**.
 
-For Providence corpus, directly map SAMPA symbols to IPA format based on the similarity of pronounciations. 
+For Providence corpus, directly map SAMPA symbols to IPA format based on the similarity of pronunciations. 
 
 ### Make yaml files in *hparams* folder compatiable with your dataset
 - Change data path in *data_folder* to make *train_json*, *valid_json*, and *test_json* valid
 - Get the pretrained model checkpoint, [*W2V2-Libri100*](https://huggingface.co/lijialudew/wav2vec_children_ASR/tree/main/save_100h), from LibriSpeech corpus from our [HuggingFace repo](https://huggingface.co/lijialudew/wav2vec_children_ASR), or pretrain from scratch using original speechbrain toolkit.
-- Change *save_folder* to the path to the pretrained model checkpoint.
+- Make a directory of *output folder* and copy the checkpoint folder to the *output folder*
+  ```
+  cd recipes/LibriSpeech/ASR/CTC_Children_PR
+  mkdir -p results/train_wav2vec2_Libri/1986/save_100h_MyST_Providence
+  cp -r CKPT_checkpoint_folder results/train_wav2vec2_Libri/1986/save_100h_MyST_Providence/
+  ```
 
 ### Fine-tune wav2vec2 model with MyST corpus
 Run the following commands to fine-tune wav2vec2 using our developed recipe
